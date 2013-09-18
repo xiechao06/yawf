@@ -41,7 +41,6 @@ class Travel(yawf.Policy):
                      'name': 'permit travel application',
                      'handler_group': models.Group.query.filter(models.Group.name=='Clerks').one(),
                      'tag': self.node.tag,
-                     'policy_name': 'PermitTravel',
                  }
                 )]
 

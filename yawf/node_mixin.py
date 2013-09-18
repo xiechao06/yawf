@@ -63,6 +63,7 @@ class NodeMixin(object):
             try:
                 node = self.query.filter(yawf.WorkFlowEngine.instance.node_model.work_flow_id==self.work_flow_id).filter(self.__class__.policy_name==policy).one()
             except NoResultFound:
+                node_kwargs.update(policy_name=policy)
                 node = self.__class__(work_flow=self.work_flow, **node_kwargs)
                 do_commit(node)
             ret.append(node)

@@ -94,7 +94,7 @@ class Test(BaseTest):
         class A(yawf.Policy):
             @property
             def dependencies(self):
-                return [('B', {'name': 'B', 'policy_name': 'B'}), ('C', {'name': 'C', 'policy_name': 'C'})]
+                return [('B', {'name': 'B'}), ('C', {'name': 'C'})]
 
 
         class B(yawf.Policy):
@@ -104,7 +104,7 @@ class Test(BaseTest):
 
             @property
             def dependencies(self):
-                return [('D', {'name': 'D', 'policy_name': 'D'})]
+                return [('D', {'name': 'D'})]
 
         class D(yawf.Policy):
             pass
@@ -177,7 +177,6 @@ class Test(BaseTest):
             def dependencies(self):
                 return [('F', {
                     'name': 'F',
-                    'policy_name': 'F'
                 })]
 
         class F(yawf.Policy):
@@ -212,7 +211,6 @@ class Test(BaseTest):
             def dependencies(self):
                 return [('F', {
                     'name': 'F',
-                    'policy_name': 'F'
                 })]
         yawf.register_policy(E_)
         work_flow = yawf.new_work_flow('foo work flow', 

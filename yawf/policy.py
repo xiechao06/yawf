@@ -12,7 +12,7 @@ class Policy(object):
         """
         :return: a list of plicies depentent on, each element is a 2-items tuple, 
         of which the first is a policy's name, the second is a dict used to 
-        generate the node
+        generate the node, except the 'policy_name' argument
         """
         return []
 
