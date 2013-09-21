@@ -41,9 +41,10 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
         unmet_node = self._find_next_unmet_node(self.root_node)
         if unmet_node:
             last_operated_node.on_delayed(unmet_node)
+            self.current_node = unmet_node
+            do_commit(self)
             raise WorkFlowDelayed(unmet_node, "node %s is not met" % unicode(unmet_node))
         self.status = constants.WORK_FLOW_APPROVED
-        self.current_node = unmet_node
         do_commit(self)
 
         # execute all the nodes

@@ -129,6 +129,7 @@ class Test(BaseTest):
                         assert delayed_node.approved
                         delayed_node = e_info.value.node
                         assert not delayed_node.approved
+                        assert delayed_node.id == work_flow.current_node_id
 
                         e_info = raises(yawf.exceptions.WorkFlowDelayed, delayed_node.approve)
                         assert delayed_node.approved
