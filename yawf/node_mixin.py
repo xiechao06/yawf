@@ -96,7 +96,9 @@ class NodeMixin(object):
         do_commit(self)
         self.work_flow.refuse(self)
 
-
     def __unicode__(self):
         return '<Node %s>' % self.policy_name
 
+    @property
+    def annotation(self):
+        return self.policy.annotation

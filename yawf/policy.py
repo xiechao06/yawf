@@ -76,3 +76,7 @@ class Policy(object):
         override this method to perform actions like informing somebody
         """
         pass
+
+    @property
+    def annotation(self):
+        pass
