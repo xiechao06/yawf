@@ -52,6 +52,7 @@ class Test(BaseTest):
         self._test_single_node()
         self._test_multiple_node()
         self._test_execution()
+        self._test_binding()
 
     def _test_single_node(self):
 
@@ -223,6 +224,23 @@ class Test(BaseTest):
         
         delayed_node.approve()
         assert work_flow.status == yawf.constants.WORK_FLOW_EXECUTED
+    
+    def _test_binding(self):
+
+        class G(yawf.Policy):
+            pass
+
+        yawf.register_policy(G)
+
+        work_flow = yawf.new_work_flow('foo work flow',
+                                       lambda work_flow: yawf.WorkFlowEngine.instance.node_model(work_flow=work_flow, name='G', policy_name='G'), 
+                                      token='foo')
+
+        assert yawf.token_bound('foo work flow', 'foo')
+
+        work_flow.start()
+        assert not yawf.token_bound('foo work flow', 'foo')
+
 
 
 if __name__ == "__main__":

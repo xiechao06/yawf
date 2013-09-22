@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 from datetime import datetime
-from hashlib import md5
 
 from flask import Flask, render_template, request, redirect, url_for, current_app, flash
 from flask.ext.login import current_user, login_required, LoginManager, login_user, logout_user

@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import yawf
 from yawf.utils import do_commit
+import md5
 
 class WorkFlowEngine(object):
 
@@ -32,3 +33,4 @@ class WorkFlowEngine(object):
         :return: a policy with given name
         '''
         return self._registered_policy_cls_map[policy_name]
+

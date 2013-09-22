@@ -13,6 +13,7 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
     __tablename__ = 'TB_WORK_FLOW'
 
     id = sa.Column(sa.Integer, primary_key=True) 
+    tag = sa.Column(sa.String(32), nullable=False)
     annotation = sa.Column(sa.String(64))
     status = sa.Column(sa.Integer, default=constants.WORK_FLOW_PROCESSING)
     failed = sa.Column(sa.Boolean, default=False)
@@ -20,6 +21,8 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
     root_node = sa.orm.relationship(WorkFlowEngine.instance.node_model, primaryjoin=WorkFlowEngine.instance.node_model.__name__+".id==WorkFlow.root_node_id")
     current_node_id = sa.Column(sa.Integer, sa.ForeignKey(WorkFlowEngine.instance.node_model.__tablename__+".id"))
     current_node = sa.orm.relationship(WorkFlowEngine.instance.node_model, primaryjoin=WorkFlowEngine.instance.node_model.__name__+".id==WorkFlow.current_node_id")
+    token = sa.Column(sa.String(32))
+    
 
     def start(self):
         """
@@ -113,3 +116,8 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
             self.failed = True
             do_commit(self)
             raise
+
+    def bind(self, token):
+        self.token = token
+        do_commit(self)
+    

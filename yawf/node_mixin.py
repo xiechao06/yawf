@@ -15,7 +15,7 @@ class NodeMixin(object):
     id = sa.Column(sa.Integer, primary_key=True) 
     @declared_attr
     def work_flow_id(self):
-        return sa.Column(sa.Integer, sa.ForeignKey('TB_WORK_FLOW.id', use_alter=True, name="fk_work_flow_id"))
+        return sa.Column(sa.Integer, sa.ForeignKey('TB_WORK_FLOW.id', use_alter=True, name="fk_work_flow_node"))
 
     @declared_attr
     def work_flow(self):
@@ -26,7 +26,7 @@ class NodeMixin(object):
     failed = sa.Column(sa.Boolean, default=False)
     create_time = sa.Column(sa.DateTime, default=datetime.now)
     handle_time = sa.Column(sa.DateTime)
-    policy_name = sa.Column(sa.String(32))
+    policy_name = sa.Column(sa.String(64))
     tag = sa.Column(sa.String(32))
 
     @property
