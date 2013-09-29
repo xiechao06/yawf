@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-from sqlalchemy import and_
 
 import yawf
 from yawf.utils import do_commit
@@ -39,5 +38,6 @@ def token_bound(tag, token):
     
     :return: a processing work flow with given tag and token or None
     """
+    from sqlalchemy import and_
     model = yawf.models.WorkFlow
     return model.query.filter(and_(model.tag==tag, model.token==token, model.status==yawf.constants.WORK_FLOW_PROCESSING)).first()
