@@ -2,7 +2,6 @@ from distutils.core import setup
 from setuptools import find_packages
 from setuptools.command.test import test as TestCommand
 import sys
-import os.path
 
 PACKAGE = "yawf"
 NAME = "yawf"
@@ -17,7 +16,7 @@ DOC = __import__(PACKAGE).__doc__
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ["yawf/test.py"]
+        self.test_args = ['yawf/test/test.py']
         self.test_suite = True
 
     def run_tests(self):

@@ -15,11 +15,14 @@ class NodeMixin(object):
     id = sa.Column(sa.Integer, primary_key=True) 
     @declared_attr
     def work_flow_id(self):
-        return sa.Column(sa.Integer, sa.ForeignKey('TB_WORK_FLOW.id', use_alter=True, name="fk_work_flow_node"))
+        return sa.Column(sa.Integer, 
+                sa.ForeignKey('TB_WORK_FLOW.id', use_alter=True, 
+                    name="fk_work_flow_node"))
 
     @declared_attr
     def work_flow(self):
-        return sa.orm.relationship('WorkFlow', primaryjoin='WorkFlow.id=='+self.__name__+".work_flow_id")
+        return sa.orm.relationship('WorkFlow', 
+                primaryjoin='WorkFlow.id=='+self.__name__+".work_flow_id")
 
     name = sa.Column(sa.String(64))
     approved = sa.Column(sa.Boolean, default=False)
