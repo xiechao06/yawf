@@ -34,3 +34,6 @@ class WorkFlowEngine(object):
         '''
         return self._registered_policy_cls_map[policy_name]
 
+
+    def clear_polices(self):
+        self._registered_policy_cls_map = {}

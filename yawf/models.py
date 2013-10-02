@@ -1,28 +1,38 @@
 # -*- coding: UTF-8 -*-
-from datetime import datetime
-
 import sqlalchemy as sa
-from sqlalchemy.ext.declarative import declared_attr
 
 from yawf import constants, WorkFlowEngine
 from yawf.utils import do_commit
-from yawf.exceptions import WorkFlowRefused, WorkFlowDelayed, WorkFlowProcessing
+from yawf.exceptions import (WorkFlowRefused, WorkFlowDelayed,
+                             WorkFlowProcessing)
 
-class WorkFlow(WorkFlowEngine.instance.db.Model):
+
+_DBModel = WorkFlowEngine.instance.db.Model
+_NodeModel = WorkFlowEngine.instance.node_model
+
+
+class WorkFlow(_DBModel):
 
     __tablename__ = 'TB_WORK_FLOW'
 
-    id = sa.Column(sa.Integer, primary_key=True) 
+    id = sa.Column(sa.Integer, primary_key=True)
     tag = sa.Column(sa.String(32), nullable=False)
     annotation = sa.Column(sa.String(64))
     status = sa.Column(sa.Integer, default=constants.WORK_FLOW_PROCESSING)
     failed = sa.Column(sa.Boolean, default=False)
-    root_node_id = sa.Column(sa.Integer, sa.ForeignKey(WorkFlowEngine.instance.node_model.__tablename__+".id"))
-    root_node = sa.orm.relationship(WorkFlowEngine.instance.node_model, primaryjoin=WorkFlowEngine.instance.node_model.__name__+".id==WorkFlow.root_node_id")
-    current_node_id = sa.Column(sa.Integer, sa.ForeignKey(WorkFlowEngine.instance.node_model.__tablename__+".id"))
-    current_node = sa.orm.relationship(WorkFlowEngine.instance.node_model, primaryjoin=WorkFlowEngine.instance.node_model.__name__+".id==WorkFlow.current_node_id")
+    root_node_id = sa.Column(sa.Integer,
+                             sa.ForeignKey(
+                                 _NodeModel.__tablename__ + ".id"))
+    root_node = sa.orm.relationship(_NodeModel,
+                                    primaryjoin=_NodeModel.__name__ +
+                                    ".id==WorkFlow.root_node_id")
+    current_node_id = sa.Column(sa.Integer,
+                                sa.ForeignKey(_NodeModel.__tablename__ +
+                                              ".id"))
+    current_node = sa.orm.relationship(_NodeModel,
+                                       primaryjoin=_NodeModel.__name__ +
+                                       ".id==WorkFlow.current_node_id")
     token = sa.Column(sa.String(32))
-    
 
     def start(self):
         """
@@ -36,7 +46,8 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
         LEAF to ROOT
 
         :raise: WorkFlowRefused when the node flow has been refused
-        :raise: WorkFlowDelayed when there exists node that hasn't been approved
+        :raise: WorkFlowDelayed when there exists node that hasn't been
+        approved
         """
         if self.status == constants.WORK_FLOW_REFUSED:
             raise WorkFlowRefused()
@@ -46,7 +57,8 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
             last_operated_node.on_delayed(unmet_node)
             self.current_node = unmet_node
             do_commit(self)
-            raise WorkFlowDelayed(unmet_node, "node %s is not met" % unicode(unmet_node))
+            raise WorkFlowDelayed(unmet_node,
+                                  "node %s is not met" % unicode(unmet_node))
         self.status = constants.WORK_FLOW_APPROVED
         do_commit(self)
 
@@ -63,7 +75,8 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
 
     def _find_next_unmet_node(self, node):
         """
-        find the next unapproved node (note, if the node is waiting for approvement, it will not be returned)
+        find the next unapproved node (note, if the node is waiting for
+        approvement, it will not be returned)
 
         :param node: search from it
         """
@@ -74,7 +87,7 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
             unmet_node = self._find_next_unmet_node(dep_node)
             if unmet_node:
                 return unmet_node
-    
+
     def refuse(self, caused_by):
         """
         :param caused_by: upon which node, the task flow is refused
@@ -120,4 +133,3 @@ class WorkFlow(WorkFlowEngine.instance.db.Model):
     def bind(self, token):
         self.token = token
         do_commit(self)
-    
